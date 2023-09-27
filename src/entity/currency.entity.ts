@@ -1,7 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, getRepository } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  BaseEntity,
+  Like,
+} from 'typeorm';
 
 @Entity('currency')
-export class Currency {
+export class Currency extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -14,7 +20,11 @@ export class Currency {
   @Column({ nullable: true })
   conversionRate: number;
 
-  // static async getAllCurrencies(): Promise<Currency[]> {
-  //   return this.find(); // Use TypeORM's find method to retrieve all currencies
-  // }
+  static async getAllCurrenciesStartingWithA(): Promise<Currency[]> {
+    return this.find({
+      where: {
+        currencyFrom: Like('A%'),
+      },
+    }); // Use TypeORM's find method to retrieve all currencies
+  }
 }

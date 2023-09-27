@@ -1,22 +1,32 @@
 // src/currency/currency.controller.ts
 import { Controller, Get, Query, BadRequestException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { Currency } from 'src/entity/currency.entity';
 import { ConvertCurrenciesDTO } from './dto/currency.request.dtos';
-import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
-import { Conversion } from './dto/conversion.dto';
+import { ApiOperation } from '@nestjs/swagger';
+import { ConversionResponseDto } from './dto/conversion.response.dtos';
 
 @Controller()
 export class CurrencyController {
-  constructor(
-    @InjectRepository(Currency)
-    private readonly currencyRepository: Repository<Currency>,
-  ) {}
+  constructor() {}
+
+  @Get('save')
+  async save(
+    @Query('from') from: string,
+    @Query('to') to: string,
+    @Query('rate') rate: string,
+  ) {
+    const currency = new Currency();
+    currency.currencyFrom = from;
+    currency.currencyTo = to;
+    currency.conversionRate = Number(rate);
+    await currency.save();
+  }
 
   @Get('convert')
   @ApiOperation({ summary: 'convert currency' })
-  async convertCurrency(@Query() query: ConvertCurrenciesDTO) {
+  async convertCurrency(
+    @Query() query: ConvertCurrenciesDTO,
+  ): Promise<ConversionResponseDto> {
     const { currencyFrom, currencyTo, amount } = query;
 
     if (currencyFrom === currencyTo) {
@@ -25,7 +35,7 @@ export class CurrencyController {
       );
     }
 
-    const currencyPair = await this.currencyRepository.findOne({
+    const currencyPair = await Currency.findOne({
       where: {
         currencyFrom,
         currencyTo,
@@ -45,17 +55,11 @@ export class CurrencyController {
       convertedAmount: convertedAmount,
     };
   }
-  @Get('currencies')
 
-  // async getAllCurrencies() {
-  //    Use the static method to fetch all currencies
-  //   const currencies = await Currency.getAllCurrencies();
-  //   return currencies;
-  // }
+  @Get('currencies')
   @ApiOperation({ summary: 'Get a list of currencies' })
-  @ApiOkResponse({ type: [Conversion] }) // Use your DTO here
-  async getAllCurrencies() {
-    const currencies = await this.currencyRepository.find();
+  async getAllCurrencies(): Promise<string[]> {
+    const currencies = await Currency.find();
     const currencyPairs = currencies.map(
       (currency) => `${currency.currencyFrom} -> ${currency.currencyTo}`,
     );
