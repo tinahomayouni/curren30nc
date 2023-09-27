@@ -46,6 +46,12 @@ export class CurrencyController {
     };
   }
   @Get('currencies')
+
+  // async getAllCurrencies() {
+  //    Use the static method to fetch all currencies
+  //   const currencies = await Currency.getAllCurrencies();
+  //   return currencies;
+  // }
   @ApiOperation({ summary: 'Get a list of currencies' })
   @ApiOkResponse({ type: [Conversion] }) // Use your DTO here
   async getAllCurrencies() {

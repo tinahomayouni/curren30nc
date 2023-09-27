@@ -14,13 +14,7 @@ export class Currency {
   @Column({ nullable: true })
   conversionRate: number;
 
-  // static async findByCurrencyName(
-  //   currencyFrom: string,
-  //   currencyTo: string,
-  // ): Promise<Currency[]> {
-  //   return this.createQueryBuilder('currency')
-  //     .where('currency.currencyFrom = :currencyFrom', { currencyFrom })
-  //     .andWhere('currency.currencyTo = :currencyTo', { currencyTo })
-  //     .getMany();
+  // static async getAllCurrencies(): Promise<Currency[]> {
+  //   return this.find(); // Use TypeORM's find method to retrieve all currencies
   // }
 }
