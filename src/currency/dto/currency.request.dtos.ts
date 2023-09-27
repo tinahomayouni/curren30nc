@@ -21,9 +21,7 @@ export class ConvertCurrenciesDTO {
   @DontMatch('comment', { message: helloMessage }) //usage by @
   currencyTo: string;
 
-  @IsNotEmpty()
   @IsNumber()
-  @ApiProperty()
   @Transform(({ value }) => parseInt(value))
   conversionRate: number;
 

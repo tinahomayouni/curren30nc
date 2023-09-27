@@ -15,6 +15,7 @@ export class CurrencyController {
   ) {}
 
   @Get('convert')
+  @ApiOperation({ summary: 'convert currency' })
   async convertCurrency(@Query() query: ConvertCurrenciesDTO) {
     const { currencyFrom, currencyTo, amount } = query;
 
