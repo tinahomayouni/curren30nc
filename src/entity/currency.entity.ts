@@ -1,6 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, getRepository } from 'typeorm';
 
-@Entity()
+@Entity('currency')
 export class Currency {
   @PrimaryGeneratedColumn()
   id: number;
@@ -11,6 +11,16 @@ export class Currency {
   @Column()
   currencyTo: string;
 
-  @Column()
+  @Column({ nullable: true })
   conversionRate: number;
+
+  // static async findByCurrencyName(
+  //   currencyFrom: string,
+  //   currencyTo: string,
+  // ): Promise<Currency[]> {
+  //   return this.createQueryBuilder('currency')
+  //     .where('currency.currencyFrom = :currencyFrom', { currencyFrom })
+  //     .andWhere('currency.currencyTo = :currencyTo', { currencyTo })
+  //     .getMany();
+  // }
 }

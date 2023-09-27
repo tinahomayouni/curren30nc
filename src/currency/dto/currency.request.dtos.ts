@@ -27,9 +27,9 @@ export class ConvertCurrenciesDTO {
   @Transform(({ value }) => parseInt(value))
   conversionRate: number;
 
-  @IsString()
   @IsNotEmpty()
+  @IsNumber()
   @ApiProperty()
-  @Length(10, 15)
-  comment: string;
+  @Transform(({ value }) => parseInt(value))
+  amount: number;
 }

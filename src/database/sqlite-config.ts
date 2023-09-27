@@ -3,7 +3,7 @@ import { DataSource } from 'typeorm';
 
 export const config = {
   type: 'sqlite',
-  database: 'src/database/sqlite.db', // Verify the path
+  database: 'src/database/sqlite.db',
   entities: [__dirname + '/entity/**/*.entity{.js,.ts}'],
   migrations: [__dirname + '/migrations/*{.js,.ts}'],
 } satisfies TypeOrmModuleOptions;

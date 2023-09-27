@@ -3,7 +3,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Currency } from 'src/entity/currency.entity';
-
 @Module({
   imports: [
     TypeOrmModule.forRoot({
