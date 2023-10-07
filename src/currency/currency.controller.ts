@@ -4,6 +4,7 @@ import { Currency } from 'src/entity/currency.entity';
 import { ConvertCurrenciesDTO } from './dto/currency.request.dtos';
 import { ApiOperation } from '@nestjs/swagger';
 import { ConversionResponseDto } from './dto/conversion.response.dtos';
+import { CurrencyResponse } from './dto/currency.response.dto';
 
 @Controller()
 export class CurrencyController {
@@ -58,11 +59,8 @@ export class CurrencyController {
 
   @Get('currencies')
   @ApiOperation({ summary: 'Get a list of currencies' })
-  async getAllCurrencies(): Promise<string[]> {
+  async getAllCurrencies(): Promise<CurrencyResponse[]> {
     const currencies = await Currency.find();
-    const currencyPairs = currencies.map(
-      (currency) => `${currency.currencyFrom} -> ${currency.currencyTo}`,
-    );
-    return currencyPairs;
+    return currencies.map((c) => ({ from: c.currencyFrom, to: c.currencyTo }));
   }
 }
