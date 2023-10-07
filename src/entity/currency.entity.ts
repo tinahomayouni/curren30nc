@@ -4,9 +4,11 @@ import {
   Column,
   BaseEntity,
   Like,
+  Unique,
 } from 'typeorm';
 
 @Entity('currency')
+@Unique('uniqueExchange', ['currencyFrom', 'currencyTo'])
 export class Currency extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
