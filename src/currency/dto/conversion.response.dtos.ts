@@ -2,10 +2,14 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class ConversionResponseDto {
   @ApiProperty()
-  originalCurrency: string;
+  from: string;
+  @ApiProperty()
+  fromLabel: string;
 
   @ApiProperty()
-  targetCurrency: string;
+  to: string;
+  @ApiProperty()
+  toLabel: string;
 
   @ApiProperty()
   convertedAmount: number;

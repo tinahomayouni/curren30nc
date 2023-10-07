@@ -25,7 +25,7 @@ export class Currency extends BaseEntity {
   @Column({ default: '' })
   toLabel: string;
 
-  @Column({ nullable: true })
+  @Column()
   conversionRate: number;
 
   static async getAllCurrenciesStartingWithA(): Promise<Currency[]> {

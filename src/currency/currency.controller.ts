@@ -5,6 +5,7 @@ import { ConvertCurrenciesDTO } from './dto/currency.request.dtos';
 import { ApiOperation } from '@nestjs/swagger';
 import { ConversionResponseDto } from './dto/conversion.response.dtos';
 import { CurrencyResponse } from './dto/currency.response.dto';
+import { CurrencyDomain } from './domain/CurrencyDomain';
 
 @Controller()
 export class CurrencyController {
@@ -37,17 +38,27 @@ export class CurrencyController {
       },
     });
 
-    if (!currencyPair || currencyPair.conversionRate === null) {
+    if (!currencyPair) {
       throw new BadRequestException(
         'Invalid currency pair or conversion rate not available.',
       );
     }
 
-    const convertedAmount = amount * currencyPair.conversionRate;
+    const currencyDomain = new CurrencyDomain(
+      currencyPair.currencyFrom,
+      currencyPair.currencyTo,
+      currencyPair.fromLabel,
+      currencyPair.toLabel,
+      currencyPair.conversionRate,
+    );
+
+    const convertedAmount = amount * currencyDomain.conversionRate;
     return {
-      originalCurrency: currencyFrom,
-      targetCurrency: currencyTo,
-      convertedAmount: convertedAmount,
+      from: currencyDomain.from,
+      fromLabel: currencyDomain.fromLabel,
+      to: currencyDomain.to,
+      toLabel: currencyDomain.toLabel,
+      convertedAmount,
     };
   }
 
@@ -55,6 +66,22 @@ export class CurrencyController {
   @ApiOperation({ summary: 'Get a list of currencies' })
   async getAllCurrencies(): Promise<CurrencyResponse[]> {
     const currencies = await Currency.find();
-    return currencies.map((c) => ({ from: c.currencyFrom, to: c.currencyTo }));
+
+    return currencies.map((c) => {
+      const currencyDomain = new CurrencyDomain(
+        c.currencyFrom,
+        c.currencyTo,
+        c.fromLabel,
+        c.toLabel,
+        c.conversionRate,
+      );
+
+      return {
+        from: currencyDomain.from,
+        to: currencyDomain.to,
+        fromLabel: currencyDomain.fromLabel,
+        toLabel: currencyDomain.toLabel,
+      };
+    });
   }
 }
