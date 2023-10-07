@@ -10,7 +10,7 @@ export const DontMatch = (
   to: string,
   validationOptions?: ValidationOptions,
 ) => {
-  return (object: Object, name: string) => {
+  return (object: object, name: string) => {
     console.log(object, 'object', name, 'name');
     registerDecorator({
       name: 'dontMatch',
