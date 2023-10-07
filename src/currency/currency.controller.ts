@@ -30,12 +30,6 @@ export class CurrencyController {
   ): Promise<ConversionResponseDto> {
     const { currencyFrom, currencyTo, amount } = query;
 
-    if (currencyFrom === currencyTo) {
-      throw new BadRequestException(
-        'CurrencyFrom and CurrencyTo must be different.',
-      );
-    }
-
     const currencyPair = await Currency.findOne({
       where: {
         currencyFrom,

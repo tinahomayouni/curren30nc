@@ -11,7 +11,6 @@ export const DontMatch = (
   validationOptions?: ValidationOptions,
 ) => {
   return (object: object, name: string) => {
-    console.log(object, 'object', name, 'name');
     registerDecorator({
       name: 'dontMatch',
       target: object.constructor,
@@ -22,6 +21,7 @@ export const DontMatch = (
     });
   };
 };
+
 @ValidatorConstraint()
 class DontMatchValidator implements ValidatorConstraintInterface {
   validate(
@@ -36,13 +36,6 @@ class DontMatchValidator implements ValidatorConstraintInterface {
   defaultMessage?(validationArguments?: ValidationArguments): string {
     const to = validationArguments.constraints[0];
     const property = validationArguments.property;
-    return `${property} should not equal to ${to} `;
+    return `${property} should not be equal to ${to} `;
   }
-}
-export function helloMessage(
-  validationArguments?: ValidationArguments,
-): string {
-  const to = validationArguments.constraints[0];
-  const property = validationArguments.property;
-  return `${property} should not Hello to ${to} `;
 }
