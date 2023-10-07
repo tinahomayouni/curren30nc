@@ -1,38 +1,18 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  BaseEntity,
-  Like,
-  Unique,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
 
 @Entity('currency')
-@Unique('uniqueExchange', ['currencyFrom', 'currencyTo'])
 export class Currency extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  currencyFrom: string;
-
-  @Column({ default: '' })
-  fromLabel: string;
+  @Column({ unique: true })
+  name: string;
 
   @Column()
-  currencyTo: string;
+  label: string;
 
-  @Column({ default: '' })
-  toLabel: string;
-
-  @Column()
-  conversionRate: number;
-
-  static async getAllCurrenciesStartingWithA(): Promise<Currency[]> {
-    return this.find({
-      where: {
-        currencyFrom: Like('A%'),
-      },
-    }); // Use TypeORM's find method to retrieve all currencies
+  constructor(params: Partial<Currency>) {
+    super();
+    Object.assign(this, params);
   }
 }

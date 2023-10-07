@@ -1,28 +1,28 @@
 // src/currency/currency.controller.ts
 import { Controller, Get, Query, BadRequestException } from '@nestjs/common';
-import { Currency } from 'src/entity/currency.entity';
 import { ConvertCurrenciesDTO } from './dto/currency.request.dtos';
 import { ApiOperation } from '@nestjs/swagger';
 import { ConversionResponseDto } from './dto/conversion.response.dtos';
 import { CurrencyResponse } from './dto/currency.response.dto';
 import { CurrencyDomain } from './domain/CurrencyDomain';
+import { ExchangeRate } from 'src/entity/exchangeRate.entity';
 
 @Controller()
 export class CurrencyController {
   constructor() {}
 
-  @Get('save')
-  async save(
-    @Query('from') from: string,
-    @Query('to') to: string,
-    @Query('rate') rate: string,
-  ) {
-    const currency = new Currency();
-    currency.currencyFrom = from;
-    currency.currencyTo = to;
-    currency.conversionRate = Number(rate);
-    await currency.save();
-  }
+  // @Get('save')
+  // async save(
+  //   @Query('from') from: string,
+  //   @Query('to') to: string,
+  //   @Query('rate') rate: string,
+  // ) {
+  //   const exchangeRate = new ExchangeRate();
+  //   exchangeRate.currencyFrom = await Currency.upsert({ name: from }, ['name']);
+  //   exchangeRate.currencyTo = await Currency.upsert({ name: to }, ['name']);
+  //   exchangeRate.conversionRate = Number(rate);
+  //   await exchangeRate.save();
+  // }
 
   @Get('convert')
   @ApiOperation({ summary: 'convert currency' })
@@ -31,10 +31,14 @@ export class CurrencyController {
   ): Promise<ConversionResponseDto> {
     const { currencyFrom, currencyTo, amount } = query;
 
-    const currencyPair = await Currency.findOne({
+    const currencyPair = await ExchangeRate.findOne({
       where: {
-        currencyFrom,
-        currencyTo,
+        currencyFrom: {
+          name: currencyFrom,
+        },
+        currencyTo: {
+          name: currencyTo,
+        },
       },
     });
 
@@ -45,10 +49,10 @@ export class CurrencyController {
     }
 
     const currencyDomain = new CurrencyDomain(
-      currencyPair.currencyFrom,
-      currencyPair.currencyTo,
-      currencyPair.fromLabel,
-      currencyPair.toLabel,
+      currencyPair.currencyFrom.name,
+      currencyPair.currencyTo.name,
+      currencyPair.currencyFrom.label,
+      currencyPair.currencyTo.label,
       currencyPair.conversionRate,
     );
 
@@ -65,14 +69,14 @@ export class CurrencyController {
   @Get('currencies')
   @ApiOperation({ summary: 'Get a list of currencies' })
   async getAllCurrencies(): Promise<CurrencyResponse[]> {
-    const currencies = await Currency.find();
+    const exchangeRates = await ExchangeRate.find();
 
-    return currencies.map((c) => {
+    return exchangeRates.map((c) => {
       const currencyDomain = new CurrencyDomain(
-        c.currencyFrom,
-        c.currencyTo,
-        c.fromLabel,
-        c.toLabel,
+        c.currencyFrom.name,
+        c.currencyTo.name,
+        c.currencyFrom.label,
+        c.currencyTo.label,
         c.conversionRate,
       );
 
