@@ -14,8 +14,14 @@ export class Currency extends BaseEntity {
   @Column()
   currencyFrom: string;
 
+  @Column({ default: '' })
+  fromLabel: string;
+
   @Column()
   currencyTo: string;
+
+  @Column({ default: '' })
+  toLabel: string;
 
   @Column({ nullable: true })
   conversionRate: number;
